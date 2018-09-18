@@ -1,0 +1,45 @@
+_Screen.Caption="Reconversion Monetaria 2018"
+_screen.Visible= .F.
+_screen.Icon= 'icono.ICO' 
+_screen.WindowState= 2
+_screen.ControlBox= .F.
+SET sysmenu to
+SET TALK OFF
+SET DATE BRITISH
+SET DELETED ON
+SET EXCLUSIVE ON
+SET CENTURY on
+SET ENGINEBEHAVIOR 90
+ON SHUTDOWN
+SET STATUS BAR off
+ON ERROR errHandler(MESSAGE( ))
+*!*	agrego un objeto imagen
+*!*	asignamos una imagen
+_screen.AddObject("imgFondo","image")
+_screen.imgFondo.Picture= 'C:\COMEZU\BOLIVARSOBERANO.JPG'
+_screen.imgFondo.Visible= .T.
+_screen.imgFondo.Width=_screen.Width-2
+_screen.imgFondo.Height=_screen.Height-2
+_screen.imgFondo.Top=(_screen.Height-_screen.imgFondo.Height)/2
+_screen.imgFondo.Left=(_screen.Width-_screen.imgFondo.Width)/2
+_screen.imgFONDO.Anchor=240
+_screen.imgfondo.stretch = 2
+*!*	_screen.imgFondo.zorder(1)
+SET PATH TO DATA;FORMS;PROGS;MENUS;GRAPHICS;LIBS
+OPEN DATABASE LOCFILE("datosmedico.dbc")
+_screen.Visible= .T.
+IF FILE("reconversion.mem")
+	RESTORE FROM reconversion
+endif	
+IF rec_proceso='S'
+	MESSAGEBOX("Reconversion relaizada "+TRANSFORM(rec_fecha),0+48,"Aviso")
+	CANCEL
+endif	
+DO FORM reconversion
+READ events
+CLOSE ALL
+return
+FUNCTION errHandler(mess)
+MESSAGEBOX(mess,0+32,"Error")
+cancel
+RETURN
